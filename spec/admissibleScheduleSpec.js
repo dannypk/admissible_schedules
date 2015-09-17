@@ -28,23 +28,30 @@ describe('admissible schedule setup', function () {
         describe("and dependencies are not created, they are in state 0", function () {
             var part,
                 canProcessBeforeProcessing,
-                canProcessAfterProcessing;
+                canProcessAfterProcessing,
+                partState;
 
             beforeEach(function () {
                 part = 2;
                 canProcessBeforeProcessing = parts.canProcess(carParts, part);
                 parts.process(carParts, part);
                 canProcessAfterProcessing = parts.canProcess(carParts, part);
+                partState = carParts[part].state;
             });
 
             it("should not be able to build the current part", function () {
                 expect(canProcessBeforeProcessing).toBe(false);
             });
 
-            it("should 'manufacture' the dependencies parts", function () {
-                expect(canProcessAfterProcessing).toBe(true)
-            })
+            describe("then it manufacture the dependencies", function () {
+                it("should be able to process the current part", function () {
+                    expect(canProcessAfterProcessing).toBe(true)
+                });
 
+                it("should manufacture the current part", function () {
+                    expect(partState).toBe(1)
+                })
+            });
         });
 
         describe("and dependencies are created, they are in state 1", function () {
@@ -62,14 +69,20 @@ describe('admissible schedule setup', function () {
     });
 
     describe("when product doesn't have dependencies", function () {
-        var part, hasDependencies;
+        var part, hasDependencies, partState;
         beforeEach(function () {
-            part = carParts[1];
-            hasDependencies = parts.hasDependencies(part);
+            part = 1;
+            hasDependencies = parts.hasDependencies(carParts[part]);
+            parts.process(carParts, part);
+            partState = carParts[part].state;
         });
 
         it("should return false", function () {
             expect(hasDependencies).toBe(false);
+        });
+
+        it("should manufacture the current part", function () {
+            expect(partState).toBe(1);
         })
     });
 });

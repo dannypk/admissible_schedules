@@ -25,6 +25,16 @@ function canProcess(carParts, part) {
 }
 
 function process(carParts, part) {
+    if (!hasDependencies(carParts[part])) {
+        carParts[part].state = 1;
+    }
+    else {
+        buildDependencies(carParts, part);
+        carParts[part].state = 1;
+    }
+}
+
+function buildDependencies(carParts, part) {
     carParts[part].dependencies.forEach(function (dependency) {
         if (canProcess(carParts, dependency)) {
             carParts[dependency].state = 1;
@@ -33,5 +43,5 @@ function process(carParts, part) {
             process(carParts, dependency);
             carParts[dependency].state = 1;
         }
-    })
+    });
 }
