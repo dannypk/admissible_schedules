@@ -89,15 +89,18 @@ describe('admissible schedule dummy setup', function () {
     });
 
     describe('when list of products is provided', function () {
-        var buildState;
+        var buildState, schedule;
         beforeEach(function () {
-            parts.build(carParts);
+            schedule = parts.build(carParts).length;
             buildState = parts.checkBuildState(carParts);
-
         });
 
         it("should build all the parts", function () {
             expect(buildState).toBe(true);
+        });
+
+        it("should return the order of built parts", function () {
+            expect(schedule).toBe(9);
         });
     });
 });

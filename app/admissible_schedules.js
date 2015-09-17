@@ -33,16 +33,22 @@ function process(carParts, part) {
 
     else if (!hasDependencies(carParts[part])) {
         carParts[part].state = 1;
+        if (schedule.indexOf(part) === -1)
+            schedule.push(part);
     }
     else {
         buildDependencies(carParts, part);
+        if (schedule.indexOf(part) === -1)
+            schedule.push(part);
         carParts[part].state = 1;
     }
 }
 
 function buildDependencies(carParts, part) {
     carParts[part].dependencies.forEach(function (dependency) {
-        if (canProcess(carParts, dependency)) {
+        if (carParts[dependency].state === 1) {
+            return;
+        } else if (canProcess(carParts, dependency)) {
             carParts[dependency].state = 1;
         }
         else {
@@ -54,9 +60,11 @@ function buildDependencies(carParts, part) {
 
 function build(carParts) {
     for (var part in carParts) {
+        part = Number(part);
         if (carParts.hasOwnProperty(part))
             process(carParts, part);
     }
+    return schedule;
 }
 
 function checkBuildState(carParts) {
@@ -68,3 +76,5 @@ function checkBuildState(carParts) {
     }
     return isBuild;
 }
+
+var schedule = [];
