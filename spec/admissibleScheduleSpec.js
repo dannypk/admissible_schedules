@@ -9,9 +9,9 @@ describe('admissible schedule dummy setup', function () {
     beforeEach(function () {
         carParts = {
             1: {state: 0, dependencies: null}, 2: {state: 0, dependencies: null},
-            3: {state: 0, dependencies: [1]}, 4: {state: 0, dependencies: [2, 3]},
+            3: {state: 0, dependencies: [1]}, 4: {state: 0, dependencies: [2,3]},
             5: {state: 0, dependencies: [4]}, 6: {state: 0, dependencies: [4]},
-            7: {state: 0, dependencies: [5]}, 8: {state: 0, dependencies: [5]},
+            7: {state: 0, dependencies: [5, 2]}, 8: {state: 0, dependencies: [5]},
             9: {state: 0, dependencies: [6]}
         };
     });
@@ -99,7 +99,7 @@ describe('admissible schedule dummy setup', function () {
             expect(buildState).toBe(true);
         });
 
-        it("should return the order of built parts", function () {
+        it("should return the length the sequence", function () {
             expect(schedule).toBe(9);
         });
     });

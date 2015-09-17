@@ -26,7 +26,8 @@ function canProcess(carParts, part) {
     return processable;
 }
 
-function process(carParts, part) {
+function process(carParts, part, schedule) {
+    schedule = schedule || [];
     if (carParts[part].state === 1) {
         return;
     }
@@ -37,33 +38,41 @@ function process(carParts, part) {
             schedule.push(part);
     }
     else {
-        buildDependencies(carParts, part);
+        schedule = buildDependencies(carParts, part, schedule);
         if (schedule.indexOf(part) === -1)
             schedule.push(part);
         carParts[part].state = 1;
     }
 }
 
-function buildDependencies(carParts, part) {
+function buildDependencies(carParts, part, schedule) {
+    schedule = schedule || [];
     carParts[part].dependencies.forEach(function (dependency) {
         if (carParts[dependency].state === 1) {
             return;
         } else if (canProcess(carParts, dependency)) {
             carParts[dependency].state = 1;
+            if (schedule.indexOf(dependency) === -1)
+                schedule.push(dependency);
         }
         else {
-            process(carParts, dependency);
+            process(carParts, dependency, schedule);
             carParts[dependency].state = 1;
+            if (schedule.indexOf(dependency) === -1)
+                schedule.push(dependency);
         }
     });
+    return schedule;
 }
 
 function build(carParts) {
+    var schedule = [];
     for (var part in carParts) {
         part = Number(part);
         if (carParts.hasOwnProperty(part))
-            process(carParts, part);
+            process(carParts, part, schedule);
     }
+    console.log(schedule);
     return schedule;
 }
 
@@ -76,5 +85,3 @@ function checkBuildState(carParts) {
     }
     return isBuild;
 }
-
-var schedule = [];
