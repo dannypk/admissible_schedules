@@ -4,7 +4,9 @@
 module.exports = {
     hasDependencies: hasDependencies,
     canProcess: canProcess,
-    process: process
+    process: process,
+    build: build,
+    checkBuildState: checkBuildState
 };
 
 function hasDependencies(part) {
@@ -25,7 +27,11 @@ function canProcess(carParts, part) {
 }
 
 function process(carParts, part) {
-    if (!hasDependencies(carParts[part])) {
+    if (carParts[part].state === 1) {
+        return;
+    }
+
+    else if (!hasDependencies(carParts[part])) {
         carParts[part].state = 1;
     }
     else {
@@ -44,4 +50,21 @@ function buildDependencies(carParts, part) {
             carParts[dependency].state = 1;
         }
     });
+}
+
+function build(carParts) {
+    for (var part in carParts) {
+        if (carParts.hasOwnProperty(part))
+            process(carParts, part);
+    }
+}
+
+function checkBuildState(carParts) {
+    var isBuild = true;
+    for (var part in carParts) {
+        if (carParts.hasOwnProperty(part)) {
+            isBuild = isBuild && !!carParts[part].state;
+        }
+    }
+    return isBuild;
 }

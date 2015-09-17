@@ -85,5 +85,18 @@ describe('admissible schedule setup', function () {
             expect(partState).toBe(1);
         })
     });
+
+    describe('when list of products is provided', function () {
+        var buildState;
+        beforeEach(function () {
+            parts.build(carParts);
+            buildState = parts.checkBuildState(carParts);
+
+        });
+
+        it("should build all the parts", function(){
+            expect(buildState).toBe(true);
+        });
+    });
 });
 
