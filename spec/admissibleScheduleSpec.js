@@ -4,20 +4,22 @@
 
 var parts = require('../app/admissible_schedules.js');
 
-describe('admissible schedule setup', function () {
+describe('admissible schedule dummy setup', function () {
     var carParts;
     beforeEach(function () {
         carParts = {
-            1: {state: 0, dependencies: null}, 2: {state: 0, dependencies: [1, 4]},
-            3: {state: 0, dependencies: [2]}, 4: {state: 0, dependencies: [5]},
-            5: {state: 0, dependencies: [6]}, 6: {state: 0, dependencies: null}
+            1: {state: 0, dependencies: null}, 2: {state: 0, dependencies: null},
+            3: {state: 0, dependencies: [1]}, 4: {state: 0, dependencies: [2, 3]},
+            5: {state: 0, dependencies: [4]}, 6: {state: 0, dependencies: [4]},
+            7: {state: 0, dependencies: [5]}, 8: {state: 0, dependencies: [5]},
+            9: {state: 0, dependencies: [6]}
         };
     });
 
     describe('when product has dependencies', function () {
         var part, hasDependencies;
         beforeEach(function () {
-            part = carParts[2];
+            part = carParts[7];
             hasDependencies = parts.hasDependencies(part);
         });
 
@@ -32,7 +34,7 @@ describe('admissible schedule setup', function () {
                 partState;
 
             beforeEach(function () {
-                part = 2;
+                part = 7;
                 canProcessBeforeProcessing = parts.canProcess(carParts, part);
                 parts.process(carParts, part);
                 canProcessAfterProcessing = parts.canProcess(carParts, part);
@@ -57,7 +59,7 @@ describe('admissible schedule setup', function () {
         describe("and dependencies are created, they are in state 1", function () {
             var canProcess, part;
             beforeEach(function () {
-                part = 2;
+                part = 7;
                 parts.process(carParts, part);
                 canProcess = parts.canProcess(carParts, part);
             });
@@ -94,9 +96,8 @@ describe('admissible schedule setup', function () {
 
         });
 
-        it("should build all the parts", function(){
+        it("should build all the parts", function () {
             expect(buildState).toBe(true);
         });
     });
 });
-
