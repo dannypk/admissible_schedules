@@ -25,7 +25,7 @@ describe('admissible schedule setup', function () {
             expect(hasDependencies).toBe(true);
         });
 
-        describe("and dependencies are in state 0", function () {
+        describe("and dependencies are not created, they are in state 0", function () {
             var part,
                 canProcessBeforeProcessing,
                 canProcessAfterProcessing;
@@ -37,7 +37,7 @@ describe('admissible schedule setup', function () {
                 canProcessAfterProcessing = parts.canProcess(carParts, part);
             });
 
-            it("should return false", function () {
+            it("should not be able to build the current part", function () {
                 expect(canProcessBeforeProcessing).toBe(false);
             });
 
@@ -47,22 +47,21 @@ describe('admissible schedule setup', function () {
 
         });
 
-        describe("and dependencies are in state 1", function () {
+        describe("and dependencies are created, they are in state 1", function () {
             var canProcess, part;
             beforeEach(function () {
-                carParts[1].state = 1;
-                carParts[4].state = 1;
                 part = 2;
+                parts.process(carParts, part);
                 canProcess = parts.canProcess(carParts, part);
             });
 
-            it("should return true", function () {
+            it("should be able to manufacture current part", function () {
                 expect(canProcess).toBe(true);
             });
         });
     });
 
-    describe("product doesn't have dependencies", function () {
+    describe("when product doesn't have dependencies", function () {
         var part, hasDependencies;
         beforeEach(function () {
             part = carParts[1];
